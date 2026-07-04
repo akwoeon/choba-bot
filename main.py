@@ -1,24 +1,7 @@
 import discord
 from discord.ext import commands
 import os
-from http.server import BaseHTTPRequestHandler, HTTPServer
-import threading
 
-# 렌더 무료 웹 서비스 유지를 위한 가짜 웹 서버 코드
-class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
-    def do_GET(self):
-        self.send_response(200)
-        self.end_headers()
-        self.wfile.write(b'Bot is running!')
-
-def run_web_server():
-    server = HTTPServer(('0.0.0.0', int(os.environ.get('PORT', 10000))), SimpleHTTPRequestHandler)
-    server.serve_forever()
-
-# 웹 서버를 백그라운드에서 실행
-threading.Thread(target=run_web_server, daemon=True).start()
-
-# --- 디스코드 봇 기능 시작 ---
 intents = discord.Intents.default()
 intents.message_content = True 
 
@@ -55,7 +38,7 @@ async def on_message(message):
     if message.content == '초바바보':
         babo_count += 1
         save_count(babo_count)
-        await message.channel.send(f'초바바보 아니다!😡 지금까지 {babo_count}번 놀렸다!')
+        await message.channel.send(f'초바바보 아니다! 지금까지 {babo_count}번 놀렸다!')
 
     elif message.content == '죽초바김초바':
         await message.channel.send('안죽는다! 😡')
@@ -69,4 +52,4 @@ async def reset_count(interaction: discord.Interaction):
     save_count(babo_count) 
     await interaction.response.send_message('🧹 놀림 횟수가 0번으로 초기화되었습니다!')
 
-bot.run(os.environ.get('DISCORD_TOKEN').strip())
+bot.run(os.environ.get('MTUwMDg2MzA3ODY3MjM3MTcxMg.GkHwUL.AlUMP0pu7M_ZYYBpL63psp9TPXzJ6jVaZu7gIg').strip())
