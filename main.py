@@ -4,7 +4,7 @@ import os
 import threading
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
-# 🛡️ 가짜 웹 서버 설정 (UptimeRobot 접속용)
+# 🛡️ 501 Not Implemented 에러 방지용 웹 서버
 class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         self.send_response(200)
@@ -12,17 +12,22 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(b"Bot is running!")
 
+    # ⚠️ UptimeRobot이 가끔 다른 방식으로 신호를 보낼 때 에러가 나지 않도록 차단
+    def do_HEAD(self):
+        self.send_response(200)
+        self.send_header('Content-type', 'text/html; charset=utf-8')
+        self.end_headers()
+
 def run_web_server():
-    # 렌더가 지정한 포트를 찾아서 연결 (기본값 10000)
     port = int(os.environ.get("PORT", 10000))
     server_address = ('0.0.0.0', port)
     httpd = HTTPServer(server_address, SimpleHTTPRequestHandler)
     httpd.serve_forever()
 
-# 웹 서버를 봇과 동시에 실행
+# 웹 서버 실행
 threading.Thread(target=run_web_server, daemon=True).start()
 
-# --- 여기서부터 디스코드 봇 코드 ---
+# --- 디스코드 봇 코드 ---
 intents = discord.Intents.default()
 intents.message_content = True 
 
@@ -73,5 +78,4 @@ async def reset_count(interaction: discord.Interaction):
     save_count(babo_count) 
     await interaction.response.send_message('🧹 놀림 횟수가 0번으로 초기화되었습니다!')
 
-# 환경 변수에서 토큰 가져와서 실행
 bot.run(os.environ.get('DISCORD_TOKEN').strip())
