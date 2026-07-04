@@ -52,4 +52,4 @@ async def reset_count(interaction: discord.Interaction):
     save_count(babo_count) 
     await interaction.response.send_message('🧹 놀림 횟수가 0번으로 초기화되었습니다!')
 
-bot.run(os.environ.get('DISCORD_TOKEN).strip())
+bot.run(os.environ.get('DISCORD_TOKEN').strip())
